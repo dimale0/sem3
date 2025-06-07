@@ -99,4 +99,9 @@ public class TutorServiceImpl implements TutorService {
         }
         tutorRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Tutor> findByUser(User user) {
+        return tutorRepository.findByUser(user);
+    }
 }

@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/layout :: baseHeader"></div>
 
-<div th:replace="fragments/layout :: baseContent">
+<main>
     <h2>Редактировать профиль репетитора</h2>
     <form th:action="@{/tutors/edit/{id}(id=${tutorId})}" th:object="${form}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -41,8 +41,7 @@
     <p>
         <a th:href="@{/tutors}">Вернуться к списку репетиторов</a>
     </p>
-</div>
-
+</main>
 <div th:replace="fragments/layout :: baseFooter"></div>
 <div th:replace="fragments/layout :: pageScripts"></div>
 </body>
