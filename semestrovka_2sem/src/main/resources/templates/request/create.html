@@ -18,7 +18,6 @@
         <option th:each="s : ${subjects}" th:value="${s.name}"></option>
       </datalist>
       <span class="error-message" th:if="${#fields.hasErrors('subjectName')}" th:errors="*{subjectName}"></span>
-
     </div>
     <div class="form-group" th:classappend="${#fields.hasErrors('price')}? ' error'">
       <label for="price">Цена</label>
