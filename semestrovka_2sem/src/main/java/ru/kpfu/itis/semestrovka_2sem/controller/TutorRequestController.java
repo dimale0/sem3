@@ -58,10 +58,9 @@ public class TutorRequestController {
     public String listMyRequests(Authentication authentication, Model model) {
         User currentUser = userService.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
-        Optional<Tutor> tutorOpt = tutorService.findAll().stream()
-                .filter(t -> t.getUser().getId().equals(currentUser.getId()))
-                .findFirst();
-        Tutor tutor = tutorOpt.orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
+        Tutor tutor = tutorService.findByUser(currentUser)
+                .orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
+
         List<TutorRequest> requests = tutorRequestService.findAllByTutorId(tutor.getId());
         model.addAttribute("requests", requests);
         return "request/list";
@@ -102,11 +101,8 @@ public class TutorRequestController {
         try {
             User currentUser = userService.findByEmail(authentication.getName())
                     .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
-            // Находим профиль репетитора текущего пользователя вручную
-            Optional<Tutor> tutorOpt = tutorService.findAll().stream()
-                    .filter(t -> t.getUser().getId().equals(currentUser.getId()))
-                    .findFirst();
-            Tutor tutor = tutorOpt.orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
+            Tutor tutor = tutorService.findByUser(currentUser)
+                    .orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
             form.setTutorId(tutor.getId());
             tutorRequestService.create(form);
         } catch (Exception ex) {

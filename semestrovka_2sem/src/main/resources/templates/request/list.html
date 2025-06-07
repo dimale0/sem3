@@ -30,14 +30,16 @@
       <td>
         <a th:href="@{/requests/view/{id}(id=${req.id})}">Детали</a>
         <span th:if="${#request.isUserInRole('TUTOR') and req.tutor.user.email == #authentication.principal.username}">
-                            &nbsp;|&nbsp;
-                            <a th:href="@{/requests/edit/{id}(id=${req.id})}">Ред.</a>
-                            &nbsp;|&nbsp;
-                            <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" style="display:inline">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                <button type="submit" onclick="return confirm('Удалить заявку?')">Удалить</button>
-                            </form>
-                        </span>
+            &nbsp;|&nbsp;
+            <a th:href="@{/responses/request/{id}(id=${req.id})}">Отклики</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/requests/edit/{id}(id=${req.id})}">Ред.</a>
+            &nbsp;|&nbsp;
+            <form th:action="@{/requests/delete/{id}(id=${req.id})}" method="post" style="display:inline">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" onclick="return confirm('Удалить заявку?')">Удалить</button>
+            </form>
+        </span>
       </td>
     </tr>
     </tbody>

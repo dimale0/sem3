@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.core.Authentication;
 import ru.kpfu.itis.semestrovka_2sem.model.Subject;
 import ru.kpfu.itis.semestrovka_2sem.service.SubjectService;
+import ru.kpfu.itis.semestrovka_2sem.service.UserService;
+
 
 import java.util.List;
 
@@ -18,6 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeController {
     private final SubjectService subjectService;
+    private final UserService userService;
+
 
     @PreAuthorize("hasRole('TUTOR')")
     @GetMapping("/tutor")
@@ -27,9 +32,14 @@ public class HomeController {
 
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/student")
-    public String studentHome(Model model) {
+    public String studentHome(Authentication authentication, Model model) {
         List<Subject> subjects = subjectService.findAll();
         model.addAttribute("subjects", subjects);
+        Long userId = userService.findByEmail(authentication.getName())
+                .map(u -> u.getId())
+                .orElse(null);
+        model.addAttribute("studentId", userId);
+
         return "home/student";
     }
 
