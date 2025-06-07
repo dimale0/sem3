@@ -91,6 +91,7 @@ public class StudentResponseController {
             return "redirect:/tutors/create";
         }
         var tutor = tutorOpt.get();
+
         var requests = tutorRequestService.findAllByTutorId(tutor.getId());
         java.util.List<StudentResponse> all = new java.util.ArrayList<>();
         for (var req : requests) {

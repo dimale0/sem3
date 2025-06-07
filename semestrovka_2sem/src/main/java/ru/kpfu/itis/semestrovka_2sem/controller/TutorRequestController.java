@@ -63,6 +63,7 @@ public class TutorRequestController {
             return "redirect:/tutors/create";
         }
         Tutor tutor = tutorOpt.get();
+
         List<TutorRequest> requests = tutorRequestService.findAllByTutorId(tutor.getId());
         model.addAttribute("requests", requests);
         return "request/list";
@@ -108,6 +109,7 @@ public class TutorRequestController {
                 return "redirect:/tutors/create";
             }
             Tutor tutor = tutorOpt.get();
+
             form.setTutorId(tutor.getId());
             tutorRequestService.create(form);
         } catch (Exception ex) {
