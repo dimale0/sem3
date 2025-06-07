@@ -13,6 +13,7 @@ import ru.kpfu.itis.semestrovka_2sem.dto.StudentResponseCreateDto;
 import ru.kpfu.itis.semestrovka_2sem.model.StudentResponse;
 import ru.kpfu.itis.semestrovka_2sem.service.StudentResponseService;
 import ru.kpfu.itis.semestrovka_2sem.service.TutorRequestService;
+import ru.kpfu.itis.semestrovka_2sem.service.TutorService;
 import ru.kpfu.itis.semestrovka_2sem.service.UserService;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class StudentResponseController {
     private final StudentResponseService studentResponseService;
     private final UserService userService;
     private final TutorRequestService tutorRequestService;
+    private final TutorService tutorService;
 
     /**
      * Список всех откликов конкретного студента — только тот студент.
@@ -74,6 +76,25 @@ public class StudentResponseController {
         List<StudentResponse> responses = studentResponseService.findAllByRequestId(requestId);
         model.addAttribute("responses", responses);
         return "response/list-by-request"; // src/main/resources/templates/response/list-by-request.html
+    }
+
+    /**
+     * Список всех откликов на заявки текущего репетитора.
+     */
+    @PreAuthorize("hasRole('TUTOR')")
+    @GetMapping("/tutor")
+    public String listByTutor(Authentication authentication, Model model) {
+        var user = userService.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+        var tutor = tutorService.findByUser(user)
+                .orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
+        var requests = tutorRequestService.findAllByTutorId(tutor.getId());
+        java.util.List<StudentResponse> all = new java.util.ArrayList<>();
+        for (var req : requests) {
+            all.addAll(studentResponseService.findAllByRequestId(req.getId()));
+        }
+        model.addAttribute("responses", all);
+        return "response/list-by-tutor";
     }
 
     /**
