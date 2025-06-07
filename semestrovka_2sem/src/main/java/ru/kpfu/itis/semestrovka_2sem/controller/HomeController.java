@@ -37,6 +37,7 @@ public class HomeController {
                 .map(u -> u.getId())
                 .orElse(null);
         model.addAttribute("studentId", userId);
+
         return "home/student";
     }
 
