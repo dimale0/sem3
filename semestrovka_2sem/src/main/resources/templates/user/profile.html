@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/layout :: baseHeader"></div>
 
-<div th:replace="fragments/layout :: baseContent">
+<main>
   <h2>Профиль пользователя</h2>
   <div>
     <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
@@ -17,8 +17,7 @@
   <p>
     <a th:href="@{/users}">Вернуться к списку пользователей</a>
   </p>
-</div>
-
+</main>
 <div th:replace="fragments/layout :: baseFooter"></div>
 <div th:replace="fragments/layout :: pageScripts"></div>
 </body>

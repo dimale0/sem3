@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/layout :: baseHeader"></div>
 
-<div th:replace="fragments/layout :: baseContent">
+<main>
   <h2>Редактировать заявку</h2>
   <form th:action="@{/requests/edit/{id}(id=${requestId})}" th:object="${form}" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -13,14 +13,11 @@
 
     <div>
       <label>Предмет:</label>
-      <select th:field="*{subjectId}">
-        <option th:each="s : ${subjects}"
-                th:value="${s.id}"
-                th:selected="${form.subjectId == s.id}"
-                th:text="${s.name}">
-        </option>
-      </select>
-      <div th:if="${#fields.hasErrors('subjectId')}" th:errors="*{subjectId}"></div>
+      <input list="subjectsList" th:field="*{subjectName}" />
+      <datalist id="subjectsList">
+        <option th:each="s : ${subjects}" th:value="${s.name}"></option>
+      </datalist>
+      <div th:if="${#fields.hasErrors('subjectName')}" th:errors="*{subjectName}"></div>
     </div>
     <div>
       <label>Цена:</label>
@@ -46,8 +43,7 @@
   <p>
     <a th:href="@{/requests}">Вернуться к списку заявок</a>
   </p>
-</div>
-
+</main>
 <div th:replace="fragments/layout :: baseFooter"></div>
 <div th:replace="fragments/layout :: pageScripts"></div>
 </body>
