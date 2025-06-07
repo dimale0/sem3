@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/layout :: baseHeader"></div>
 
-<div th:replace="fragments/layout :: baseContent">
+<main>
   <h2>Профиль репетитора</h2>
   <div>
     <p><strong>Репетитор ID:</strong> <span th:text="${tutor.id}"></span></p>
@@ -34,8 +34,7 @@
   <p>
     <a th:href="@{/tutors}">Вернуться к списку репетиторов</a>
   </p>
-</div>
-
+</main>
 <div th:replace="fragments/layout :: baseFooter"></div>
 <div th:replace="fragments/layout :: pageScripts"></div>
 </body>
