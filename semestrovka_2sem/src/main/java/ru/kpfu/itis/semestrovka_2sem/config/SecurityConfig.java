@@ -64,6 +64,9 @@ public class SecurityConfig {
                         // Разрешаем регистрацию и статику:
                         .requestMatchers("/", "/users/register", "/css/**", "/js/**", "/favicon.ico").permitAll()
 
+                        // Доступные всем страницы просмотра
+                        .requestMatchers(HttpMethod.GET, "/tutors", "/tutors/*", "/subjects", "/requests", "/requests/view/**").permitAll()
+
                         // Примеры ограничения по ролям:
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/tutors/create/**", "/tutors/edit/**", "/tutors/delete/**").hasRole("TUTOR")
@@ -71,7 +74,7 @@ public class SecurityConfig {
                         .requestMatchers("/requests/create/**", "/requests/edit/**", "/requests/delete/**").hasRole("TUTOR")
                         .requestMatchers("/requests/*/respond").hasRole("STUDENT")
                         .requestMatchers("/responses/student/**").hasRole("STUDENT")
-                        .requestMatchers("/responses/request/**").hasRole("TUTOR")
+                        .requestMatchers("/responses/request/**", "/responses/tutor/**").hasRole("TUTOR")
 
                         // Любые остальные запросы — только для аутентифицированных:
                         .anyRequest().authenticated()
