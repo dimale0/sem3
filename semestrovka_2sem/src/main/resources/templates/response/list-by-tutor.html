@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/layout :: baseHeader"></div>
 
-<div th:replace="fragments/layout :: baseContent">
+<main>
   <h2>Отклики на мои заявки</h2>
   <table border="1">
     <thead>
@@ -29,8 +29,7 @@
     </tbody>
   </table>
   <p><a th:href="@{/home/tutor}">Вернуться в кабинет</a></p>
-</div>
-
+</main>
 <div th:replace="fragments/layout :: baseFooter"></div>
 <div th:replace="fragments/layout :: pageScripts"></div>
 </body>
