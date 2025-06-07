@@ -58,8 +58,12 @@ public class TutorRequestController {
     public String listMyRequests(Authentication authentication, Model model) {
         User currentUser = userService.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
-        Tutor tutor = tutorService.findByUser(currentUser)
-                .orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
+        Optional<Tutor> tutorOpt = tutorService.findByUser(currentUser);
+        if (tutorOpt.isEmpty()) {
+            return "redirect:/tutors/create";
+        }
+        Tutor tutor = tutorOpt.get();
+
         List<TutorRequest> requests = tutorRequestService.findAllByTutorId(tutor.getId());
         model.addAttribute("requests", requests);
         return "request/list";
@@ -100,8 +104,12 @@ public class TutorRequestController {
         try {
             User currentUser = userService.findByEmail(authentication.getName())
                     .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
-            Tutor tutor = tutorService.findByUser(currentUser)
-                    .orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
+            Optional<Tutor> tutorOpt = tutorService.findByUser(currentUser);
+            if (tutorOpt.isEmpty()) {
+                return "redirect:/tutors/create";
+            }
+            Tutor tutor = tutorOpt.get();
+
             form.setTutorId(tutor.getId());
             tutorRequestService.create(form);
         } catch (Exception ex) {
@@ -126,7 +134,7 @@ public class TutorRequestController {
         }
         TutorRequestCreateDto dto = new TutorRequestCreateDto();
         dto.setTutorId(existing.getTutor().getId());
-        dto.setSubjectId(existing.getSubject().getId());
+        dto.setSubjectName(existing.getSubject().getName());
         dto.setPrice(existing.getPrice());
         dto.setDuration(existing.getDuration());
         dto.setDescription(existing.getDescription());

@@ -86,8 +86,12 @@ public class StudentResponseController {
     public String listByTutor(Authentication authentication, Model model) {
         var user = userService.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
-        var tutor = tutorService.findByUser(user)
-                .orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
+        var tutorOpt = tutorService.findByUser(user);
+        if (tutorOpt.isEmpty()) {
+            return "redirect:/tutors/create";
+        }
+        var tutor = tutorOpt.get();
+
         var requests = tutorRequestService.findAllByTutorId(tutor.getId());
         java.util.List<StudentResponse> all = new java.util.ArrayList<>();
         for (var req : requests) {
