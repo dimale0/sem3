@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="fragments/layout :: baseHead('Отклики на мои заявки')"></head>
+<body>
+<div th:replace="fragments/layout :: baseHeader"></div>
+
+<div th:replace="fragments/layout :: baseContent">
+  <h2>Отклики на мои заявки</h2>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>ID отклика</th>
+      <th>Заявка (ID)</th>
+      <th>Студент</th>
+      <th>Сообщение</th>
+      <th>Дата</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="resp : ${responses}">
+      <td th:text="${resp.id}"></td>
+      <td>
+        <a th:href="@{/requests/view/{id}(id=${resp.tutorRequest.id})}" th:text="${resp.tutorRequest.id}"></a>
+      </td>
+      <td th:text="${resp.student.email}"></td>
+      <td th:text="${resp.message}"></td>
+      <td th:text="${#dates.format(resp.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <p><a th:href="@{/home/tutor}">Вернуться в кабинет</a></p>
+</div>
+
+<div th:replace="fragments/layout :: baseFooter"></div>
+<div th:replace="fragments/layout :: pageScripts"></div>
+</body>
+</html>
