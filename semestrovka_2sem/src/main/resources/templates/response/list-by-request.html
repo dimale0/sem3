@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/layout :: baseHeader"></div>
 
-<div th:replace="fragments/layout :: baseContent">
+<main>
   <h2>Отклики на заявку <span th:text="${requestId}"></span></h2>
   <table border="1">
     <thead>
@@ -27,8 +27,7 @@
   <p>
     <a th:href="@{/requests/view/{id}(id=${requestId})}">Вернуться к заявке</a>
   </p>
-</div>
-
+</main>
 <div th:replace="fragments/layout :: baseFooter"></div>
 <div th:replace="fragments/layout :: pageScripts"></div>
 </body>

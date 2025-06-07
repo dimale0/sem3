@@ -13,7 +13,6 @@ import ru.kpfu.itis.semestrovka_2sem.model.Subject;
 import ru.kpfu.itis.semestrovka_2sem.service.SubjectService;
 import ru.kpfu.itis.semestrovka_2sem.service.UserService;
 
-
 import java.util.List;
 
 @Controller
@@ -22,7 +21,6 @@ import java.util.List;
 public class HomeController {
     private final SubjectService subjectService;
     private final UserService userService;
-
 
     @PreAuthorize("hasRole('TUTOR')")
     @GetMapping("/tutor")

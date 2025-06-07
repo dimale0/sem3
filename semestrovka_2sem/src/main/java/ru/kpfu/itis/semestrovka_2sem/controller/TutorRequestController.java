@@ -60,7 +60,6 @@ public class TutorRequestController {
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
         Tutor tutor = tutorService.findByUser(currentUser)
                 .orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
-
         List<TutorRequest> requests = tutorRequestService.findAllByTutorId(tutor.getId());
         model.addAttribute("requests", requests);
         return "request/list";
