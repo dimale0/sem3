@@ -12,6 +12,7 @@ import ru.kpfu.itis.semestrovka_2sem.dto.StudentResponseCreateDto;
 import ru.kpfu.itis.semestrovka_2sem.dto.TutorRequestCreateDto;
 import ru.kpfu.itis.semestrovka_2sem.model.TutorRequest;
 import ru.kpfu.itis.semestrovka_2sem.model.Tutor;
+import ru.kpfu.itis.semestrovka_2sem.model.Subject;
 import ru.kpfu.itis.semestrovka_2sem.model.User;
 import ru.kpfu.itis.semestrovka_2sem.service.TutorRequestService;
 import ru.kpfu.itis.semestrovka_2sem.service.TutorService;
@@ -37,10 +38,34 @@ public class TutorRequestController {
      * Список всех заявок — доступно всем.
      */
     @GetMapping
-    public String listAll(Model model) {
-        List<TutorRequest> requests = tutorRequestService.findAll();
+    public String listAll(@RequestParam(value = "subjectId", required = false) Long subjectId,
+                          Model model) {
+        List<TutorRequest> requests;
+        if (subjectId != null) {
+            Subject subject = subjectService.findById(subjectId)
+                    .orElseThrow(() -> new IllegalArgumentException("Предмет не найден"));
+            requests = tutorRequestService.findAllBySubjectName(subject.getName());
+            model.addAttribute("selectedSubject", subject);
+        } else {
+            requests = tutorRequestService.findAll();
+        }
         model.addAttribute("requests", requests);
         return "request/list"; // src/main/resources/templates/request/list.html
+    }
+
+    @PreAuthorize("hasRole('TUTOR')")
+    @GetMapping("/my")
+    public String listMyRequests(Authentication authentication, Model model) {
+        User currentUser = userService.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+        Optional<Tutor> tutorOpt = tutorService.findByUser(currentUser);
+        if (tutorOpt.isEmpty()) {
+            return "redirect:/tutors/create";
+        }
+        Tutor tutor = tutorOpt.get();
+        List<TutorRequest> requests = tutorRequestService.findAllByTutorId(tutor.getId());
+        model.addAttribute("requests", requests);
+        return "request/list";
     }
 
     /**
@@ -78,11 +103,11 @@ public class TutorRequestController {
         try {
             User currentUser = userService.findByEmail(authentication.getName())
                     .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
-            // Находим профиль репетитора текущего пользователя вручную
-            Optional<Tutor> tutorOpt = tutorService.findAll().stream()
-                    .filter(t -> t.getUser().getId().equals(currentUser.getId()))
-                    .findFirst();
-            Tutor tutor = tutorOpt.orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
+            Optional<Tutor> tutorOpt = tutorService.findByUser(currentUser);
+            if (tutorOpt.isEmpty()) {
+                return "redirect:/tutors/create";
+            }
+            Tutor tutor = tutorOpt.get();
             form.setTutorId(tutor.getId());
             tutorRequestService.create(form);
         } catch (Exception ex) {
@@ -107,7 +132,7 @@ public class TutorRequestController {
         }
         TutorRequestCreateDto dto = new TutorRequestCreateDto();
         dto.setTutorId(existing.getTutor().getId());
-        dto.setSubjectId(existing.getSubject().getId());
+        dto.setSubjectName(existing.getSubject().getName());
         dto.setPrice(existing.getPrice());
         dto.setDuration(existing.getDuration());
         dto.setDescription(existing.getDescription());

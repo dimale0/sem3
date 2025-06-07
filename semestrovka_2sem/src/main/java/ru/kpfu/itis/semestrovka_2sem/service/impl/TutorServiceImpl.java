@@ -42,6 +42,9 @@ public class TutorServiceImpl implements TutorService {
         }
 
         // 2) Загрузим и проверим Subject
+        if (dto.getSubjectIds() == null || dto.getSubjectIds().isEmpty()) {
+            throw new IllegalArgumentException("Нужно выбрать хотя бы один предмет");
+        }
         Set<Subject> subjects = dto.getSubjectIds().stream()
                 .map(id -> subjectRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException("Subject с ID " + id + " не найден")))
@@ -82,6 +85,9 @@ public class TutorServiceImpl implements TutorService {
         existing.setDescription(dto.getDescription());
 
         // Перезагружаем Subject
+        if (dto.getSubjectIds() == null || dto.getSubjectIds().isEmpty()) {
+            throw new IllegalArgumentException("Нужно выбрать хотя бы один предмет");
+        }
         Set<Subject> newSubjects = dto.getSubjectIds().stream()
                 .map(id -> subjectRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException("Subject с ID " + id + " не найден")))
@@ -98,5 +104,10 @@ public class TutorServiceImpl implements TutorService {
             throw new EntityNotFoundException("Tutor с ID " + id + " не найден");
         }
         tutorRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Tutor> findByUser(User user) {
+        return tutorRepository.findByUser(user);
     }
 }
