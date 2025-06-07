@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/layout :: baseHeader"></div>
 
-<div th:replace="fragments/layout :: baseContent">
+<main>
   <h2>Все репетиторы</h2>
   <table border="1">
     <thead>
@@ -37,8 +37,7 @@
   <p>
     <a th:href="@{/}">На главную</a>
   </p>
-</div>
-
+</main>
 <div th:replace="fragments/layout :: baseFooter"></div>
 <div th:replace="fragments/layout :: pageScripts"></div>
 </body>
