@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      lang="ru">
+<head th:replace="~{fragments/layout :: baseHead('Главная')}"></head>
+<body>
+
+<!-- 1) Вставляем шапку -->
+<div th:replace="~{fragments/layout :: baseHeader}"></div>
+
+<!-- 2) Собственный контент главной страницы — без th:replace на baseContent -->
+<main>
+  <h2>Добро пожаловать на сайт репетиторов</h2>
+  <p>Здесь вы можете:</p>
+  <ul>
+    <li><a th:href="@{/tutors}">Смотреть список репетиторов</a></li>
+    <li><a th:href="@{/requests}">Смотреть список заявок</a></li>
+    <!-- Если пользователь анонимен, показываем ссылки "Войти/Зарегистрироваться" -->
+    <li sec:authorize="isAnonymous()">
+      <a th:href="@{/login}">Войти</a> или
+      <a th:href="@{/users/register}">Зарегистрироваться</a>
+    </li>
+  </ul>
+</main>
+
+<!-- 3) Вставляем подвал -->
+<div th:replace="~{fragments/layout :: baseFooter}"></div>
+
+<!-- 4) Дополнительные скрипты (здесь пусто) -->
+<div th:replace="~{fragments/layout :: pageScripts}"></div>
+
+</body>
+</html>

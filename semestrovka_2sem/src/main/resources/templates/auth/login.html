@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/layout :: baseHead('Вход')}"></head>
+
+<body>
+<div th:replace="~{fragments/layout :: baseHeader}"></div>
+
+<main>
+    <h2>Вход</h2>
+
+    <!-- novalidate = отключаем нативную HTML-валидацию -->
+    <form th:action="@{/login}" method="post" novalidate>
+
+        <input type="hidden"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}" />
+
+        <!-- ===== Email ===== -->
+        <div class="form-group"
+             th:classappend="${param.error != null} ? ' error'">
+            <label for="username">Email</label>
+            <input id="username"
+                   name="username"
+                   type="email"
+                   placeholder="Введите email"
+                   th:value="${param.username}" />
+
+            <span class="error-message"
+                  th:if="${param.error != null}"
+                  th:text="'Неверный email или пароль'">Ошибка</span>
+        </div>
+
+        <!-- ===== Пароль ===== -->
+        <div class="form-group"
+             th:classappend="${param.error != null} ? ' error'">
+            <label for="password">Пароль</label>
+            <input id="password"
+                   name="password"
+                   type="password"
+                   placeholder="Пароль" />
+        </div>
+
+        <button type="submit">Войти</button>
+    </form>
+
+    <p style="margin-top:1.25rem">
+        <a th:href="@{/users/register}">Регистрация нового пользователя</a>
+    </p>
+</main>
+
+<div th:replace="~{fragments/layout :: baseFooter}"></div>
+<div th:replace="~{fragments/layout :: pageScripts}"></div>
+</body>
+</html>

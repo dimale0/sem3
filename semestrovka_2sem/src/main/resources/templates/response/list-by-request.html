@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: baseHead('Отклики на заявку')"></head>
+<body>
+<div th:replace="fragments/layout :: baseHeader"></div>
+
+<div th:replace="fragments/layout :: baseContent">
+  <h2>Отклики на заявку <span th:text="${requestId}"></span></h2>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Студент (Email)</th>
+      <th>Сообщение</th>
+      <th>Дата</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="resp : ${responses}">
+      <td th:text="${resp.id}"></td>
+      <td th:text="${resp.student.email}"></td>
+      <td th:text="${resp.message}"></td>
+      <td th:text="${#dates.format(resp.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <p>
+    <a th:href="@{/requests/view/{id}(id=${requestId})}">Вернуться к заявке</a>
+  </p>
+</div>
+
+<div th:replace="fragments/layout :: baseFooter"></div>
+<div th:replace="fragments/layout :: pageScripts"></div>
+</body>
+</html>

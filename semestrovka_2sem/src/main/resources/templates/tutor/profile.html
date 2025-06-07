@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: baseHead('Профиль репетитора')"></head>
+<body>
+<div th:replace="fragments/layout :: baseHeader"></div>
+
+<div th:replace="fragments/layout :: baseContent">
+  <h2>Профиль репетитора</h2>
+  <div>
+    <p><strong>Репетитор ID:</strong> <span th:text="${tutor.id}"></span></p>
+    <p><strong>Пользователь:</strong>
+      <a th:href="@{/users/{id}(id=${tutor.user.id})}" th:text="${tutor.user.email}"></a>
+    </p>
+    <p><strong>Опыт (лет):</strong> <span th:text="${tutor.experience}"></span></p>
+    <p><strong>Описание:</strong></p>
+    <p th:text="${tutor.description != null ? tutor.description : '-'}"></p>
+    <p><strong>Предметы:</strong>
+      <span th:each="subj, iterStat : ${tutor.subjects}">
+                    <span th:text="${subj.name}"></span>
+                    <span th:if="${!iterStat.last}"></span>
+                </span>
+    </p>
+  </div>
+  <div>
+            <span th:if="${#request.isUserInRole('TUTOR') and tutor.user.email == #authentication.principal.username}">
+                <a th:href="@{/tutors/edit/{id}(id=${tutor.id})}">Редактировать профиль</a>
+                &nbsp;|&nbsp;
+                <form th:action="@{/tutors/delete/{id}(id=${tutor.id})}" method="post" style="display:inline">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" onclick="return confirm('Удалить профиль?')">Удалить профиль</button>
+                </form>
+            </span>
+  </div>
+  <p>
+    <a th:href="@{/tutors}">Вернуться к списку репетиторов</a>
+  </p>
+</div>
+
+<div th:replace="fragments/layout :: baseFooter"></div>
+<div th:replace="fragments/layout :: pageScripts"></div>
+</body>
+</html>

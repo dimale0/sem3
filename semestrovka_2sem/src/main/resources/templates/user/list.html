@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: baseHead('Список пользователей')"></head>
+<body>
+<div th:replace="fragments/layout :: baseHeader"></div>
+
+<div th:replace="fragments/layout :: baseContent">
+  <h2>Все пользователи</h2>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Имя</th>
+      <th>Фамилия</th>
+      <th>Email</th>
+      <th>Роль</th>
+      <th>Телефон</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.id}"></td>
+      <td th:text="${user.name}"></td>
+      <td th:text="${user.surname}"></td>
+      <td>
+        <a th:href="@{/users/{id}(id=${user.id})}"
+           th:text="${user.email}"></a>
+      </td>
+      <td th:text="${user.role}"></td>
+      <td th:text="${user.phoneNumber != null ? user.phoneNumber : '-'}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <p>
+    <a th:href="@{/}">На главную</a>
+  </p>
+</div>
+
+<div th:replace="fragments/layout :: baseFooter"></div>
+<div th:replace="fragments/layout :: pageScripts"></div>
+</body>
+</html>

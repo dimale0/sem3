@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: baseHead('Список репетиторов')"></head>
+<body>
+<div th:replace="fragments/layout :: baseHeader"></div>
+
+<div th:replace="fragments/layout :: baseContent">
+  <h2>Все репетиторы</h2>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Пользователь (Email)</th>
+      <th>Опыт (лет)</th>
+      <th>Описание</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="tutor : ${tutors}">
+      <td th:text="${tutor.id}"></td>
+      <td>
+        <a th:href="@{/tutors/{id}(id=${tutor.id})}"
+           th:text="${tutor.user.email}"></a>
+      </td>
+      <td th:text="${tutor.experience}"></td>
+      <td th:text="${tutor.description != null ? tutor.description : '-'}"></td>
+      <td>
+        <a th:href="@{/tutors/{id}(id=${tutor.id})}">Профиль</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div th:if="${#request.isUserInRole('TUTOR')}">
+    <a th:href="@{/tutors/create}">Создать свой профиль</a>
+  </div>
+  <p>
+    <a th:href="@{/}">На главную</a>
+  </p>
+</div>
+
+<div th:replace="fragments/layout :: baseFooter"></div>
+<div th:replace="fragments/layout :: pageScripts"></div>
+</body>
+</html>

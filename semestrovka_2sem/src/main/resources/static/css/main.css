@@ -1,0 +1,233 @@
+/* ==============================
+   CSS Variables (Color Palette)
+   ============================== */
+:root {
+    --color-primary: #2c3e50;
+    --color-secondary: #3498db;
+    --color-accent:   #e74c3c;
+    --color-background: #f5f7fa;
+    --color-surface:  #ffffff;
+    --color-text-primary:   #2c3e50;
+    --color-text-secondary: #7f8c8d;
+    --color-border:  #dfe6e9;
+    --color-error:   #e74c3c;
+    --color-error-bg:#fdeded;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+/* ==============================
+   Reset & Base Styles
+   ============================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+html{font-size:16px;scroll-behavior:smooth}
+html,body{height:100%}                     /* для «липкого» футера */
+body{
+    display:flex;flex-direction:column;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    background:var(--color-background);
+    color:var(--color-text-primary);
+    line-height:1.6;
+}
+
+/* основная колонка заполняет всё пространство */
+main{flex:1 0 auto}
+footer{flex-shrink:0}
+
+/* ==============================
+   Utility
+   ============================== */
+.hidden{display:none!important}
+.clearfix::after{content:"";display:table;clear:both}
+.container{width:90%;max-width:1200px;margin:0 auto;padding:1rem 0}
+
+/* ==============================
+   Typography
+   ============================== */
+h1,h2,h3,h4,h5,h6{color:var(--color-primary);margin-bottom:.5rem;font-weight:700;line-height:1.2}
+h1{font-size:2.5rem}h2{font-size:2rem}h3{font-size:1.75rem}
+h4{font-size:1.5rem}h5{font-size:1.25rem}h6{font-size:1rem}
+p{margin-bottom:1rem;color:var(--color-text-secondary)}
+
+/* ==============================
+   Links
+   ============================== */
+a{color:var(--color-secondary);text-decoration:none;transition:color .2s}
+a:hover,a:focus{color:var(--color-primary);text-decoration:underline}
+
+/* ==============================
+   Header & Navigation
+   ============================== */
+header{
+    background:var(--color-surface);
+    border-bottom:1px solid var(--color-border);
+    box-shadow:0 2px 4px rgba(0,0,0,.05);
+}
+
+/* — шапка: flex-размещение — */
+header nav{
+    display:flex;
+    align-items:center;
+    padding:.75rem 1rem;
+    flex-wrap:nowrap;            /* запрещаем перенос строк */
+    overflow:hidden;             /* ничего не «вылезает» вправо */
+}
+
+/* «Главная» уходит влево, всё остальное — вправо */
+header nav>a:first-child{margin-right:auto}
+
+/* интервалы между ссылками/кнопкой */
+header nav a,
+header nav form,
+header nav button{margin:0 .25rem}
+
+/* email + «Выйти» блок делаем flex-строкой */
+header nav span{
+    display:flex;
+    align-items:center;
+    gap:.25rem;
+}
+
+/* обрезаем длинные email-ы многоточием */
+header nav span span{
+    max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+
+/* форма выхода — инлайн-кнопка */
+header nav form{display:inline}
+header nav form button{
+    background:none;border:none;padding:0;margin:0;cursor:pointer;
+    color:inherit;text-decoration:underline;font:inherit
+}
+
+/* ==============================
+   Main
+   ============================== */
+main{padding:2rem 1rem;background:var(--color-background)}
+main h1,main h2{text-align:center;margin-bottom:1.5rem}
+
+/* ==============================
+   Form
+   ============================== */
+form{
+    max-width:480px;margin:2rem auto;padding:2rem;
+    background:var(--color-surface);border-radius:0;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);position:relative
+}
+.form-group{margin-bottom:1.5rem;position:relative}
+form label{
+    display:block;margin-bottom:.5rem;color:var(--color-text-primary);
+    font:700 1.125rem/1.2 'Helvetica Neue',Arial,sans-serif;
+    letter-spacing:.02em;text-transform:capitalize
+}
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="tel"],
+form input[type="number"],
+form select,
+form textarea{
+    width:100%;padding:1rem .75rem;font-size:1.1rem;height:3rem;
+    border:1px solid var(--color-border);border-radius:0;
+    background:#fff;color:var(--color-text-primary);
+    transition:border-color .2s,box-shadow .2s
+}
+form input:focus,
+form select:focus,
+form textarea:focus{
+    border-color:var(--color-secondary);
+    box-shadow:0 0 0 2px rgba(52,152,219,.2);outline:none
+}
+
+/* селект-обёртка для стрелки + интервал */
+.select-wrapper{position:relative;display:block;background:#fff;margin-top:.75rem}
+.select-wrapper::after{
+    content:"";position:absolute;top:50%;right:1rem;
+    border-left:5px solid transparent;border-right:5px solid transparent;
+    border-top:6px solid var(--color-secondary);transform:translateY(-50%);
+    pointer-events:none
+}
+/* селект: убираем фикс-высоту, уменьшаем паддинг */
+form select{
+    height:auto;padding:.65rem .75rem;background:transparent;
+    appearance:none;-webkit-appearance:none;-moz-appearance:none
+}
+
+/* ==============================
+   Error Styling
+   ============================== */
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea{border-color:var(--color-error);background:var(--color-error-bg)}
+.error-message{
+    display:flex;align-items:center;
+    color:var(--color-error);background:var(--color-error-bg);
+    font-size:.95rem;font-weight:600;line-height:1.4;
+    margin-top:.5rem;padding:.5rem .75rem;border-radius:var(--radius-sm);
+    animation:fadeIn .3s ease-out
+}
+.error-message::before{content:"⚠";margin-right:.5rem;font-size:1.1rem}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ==============================
+   Button
+   ============================== */
+form button,
+form .btn{
+    display:block;width:100%;padding:1rem 0;font-size:1.125rem;font-weight:700;
+    color:#fff;background:var(--color-secondary);border:0;border-radius:0;
+    cursor:pointer;transition:background .2s,transform .1s;text-align:center
+}
+form button:hover,form button:focus,
+form .btn:hover,form .btn:focus{background:var(--color-primary);outline:none}
+form button:active,form .btn:active{transform:translateY(1px)}
+
+/* ==============================
+   Table
+   ============================== */
+table{width:100%;border-collapse:collapse;margin-bottom:2rem}
+thead{background:var(--color-secondary);color:#fff}
+thead th{padding:.75rem 1rem;text-align:left}
+tbody tr{background:var(--color-surface)}
+tbody tr:nth-child(even){background:#f0f0f0}
+tbody td{padding:.75rem 1rem;border-bottom:1px solid var(--color-border)}
+
+/* ==============================
+   Card
+   ============================== */
+.card{
+    background:var(--color-surface);border:1px solid var(--color-border);
+    border-radius:var(--radius-md);box-shadow:0 1px 4px rgba(0,0,0,.05);
+    padding:1.5rem;margin-bottom:2rem
+}
+.card-title{font-size:1.25rem;margin-bottom:.75rem;color:var(--color-primary)}
+
+/* ==============================
+   Alerts
+   ============================== */
+.alert{padding:1rem 1.25rem;border-radius:var(--radius-sm);margin-bottom:1.5rem;font-weight:500;color:#fff}
+.alert-success{background:#2ecc71}
+.alert-info   {background:#3498db}
+.alert-warning{background:#f1c40f;color:var(--color-text-primary)}
+.alert-danger {background:var(--color-accent)}
+
+/* ==============================
+   Footer
+   ============================== */
+footer{background:var(--color-primary);color:#fff;padding:1rem 0;text-align:center;font-size:.875rem}
+footer a{color:#fff;text-decoration:underline}
+footer a:hover{color:var(--color-secondary)}
+
+/* ==============================
+   Responsive
+   ============================== */
+@media (max-width:768px){
+    .container{width:95%}
+    main{padding:1rem}
+    form{margin:1rem auto;padding:1.5rem}
+    form input,form select,form textarea{padding:.75rem .5rem;font-size:1rem;height:2.75rem}
+    form button{padding:.75rem 0;font-size:1rem}
+    .error-message{font-size:.85rem;padding:.4rem .6rem}
+}

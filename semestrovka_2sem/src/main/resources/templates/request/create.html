@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: baseHead('Создать заявку')"></head>
+<body>
+<div th:replace="fragments/layout :: baseHeader"></div>
+
+<div th:replace="fragments/layout :: baseContent">
+  <h2>Создать новую заявку</h2>
+  <form th:action="@{/requests/create}" th:object="${form}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <!-- tutorId скрыт -->
+    <input type="hidden" th:field="*{tutorId}" />
+
+    <div>
+      <label>Предмет:</label>
+      <select th:field="*{subjectId}">
+        <option th:each="s : ${subjects}" th:value="${s.id}" th:text="${s.name}"></option>
+      </select>
+      <div th:if="${#fields.hasErrors('subjectId')}" th:errors="*{subjectId}"></div>
+    </div>
+    <div>
+      <label>Цена:</label>
+      <input type="number" th:field="*{price}" min="1" />
+      <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+    </div>
+    <div>
+      <label>Длительность (мин):</label>
+      <input type="number" th:field="*{duration}" min="1" />
+      <div th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></div>
+    </div>
+    <div>
+      <label>Описание:</label>
+      <textarea th:field="*{description}"></textarea>
+    </div>
+
+    <div th:if="${creationError}">
+      <p style="color: red;" th:text="${creationError}"></p>
+    </div>
+
+    <button type="submit">Создать</button>
+  </form>
+  <p>
+    <a th:href="@{/requests}">Вернуться к списку заявок</a>
+  </p>
+</div>
+
+<div th:replace="fragments/layout :: baseFooter"></div>
+<div th:replace="fragments/layout :: pageScripts"></div>
+</body>
+</html>

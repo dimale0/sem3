@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: baseHead('Профиль пользователя')"></head>
+<body>
+<div th:replace="fragments/layout :: baseHeader"></div>
+
+<div th:replace="fragments/layout :: baseContent">
+  <h2>Профиль пользователя</h2>
+  <div>
+    <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
+    <p><strong>Имя:</strong> <span th:text="${user.name}"></span></p>
+    <p><strong>Фамилия:</strong> <span th:text="${user.surname}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+    <p><strong>Телефон:</strong> <span th:text="${user.phoneNumber != null ? user.phoneNumber : '-'}"></span></p>
+    <p><strong>Роль:</strong> <span th:text="${user.role}"></span></p>
+  </div>
+  <p>
+    <a th:href="@{/users}">Вернуться к списку пользователей</a>
+  </p>
+</div>
+
+<div th:replace="fragments/layout :: baseFooter"></div>
+<div th:replace="fragments/layout :: pageScripts"></div>
+</body>
+</html>

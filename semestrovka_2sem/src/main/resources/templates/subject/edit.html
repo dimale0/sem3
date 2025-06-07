@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: baseHead('Редактировать предмет')"></head>
+<body>
+<div th:replace="fragments/layout :: baseHeader"></div>
+
+<div th:replace="fragments/layout :: baseContent">
+    <h2>Редактировать предмет</h2>
+    <form th:action="@{/subjects/edit/{id}(id=${subject.id})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <div>
+            <label>Новое название:</label>
+            <input type="text" name="name" th:value="${subject.name}" />
+        </div>
+
+        <div th:if="${editError}">
+            <p style="color: red;" th:text="${editError}"></p>
+        </div>
+
+        <button type="submit">Сохранить</button>
+    </form>
+    <p>
+        <a th:href="@{/subjects}">Вернуться к списку предметов</a>
+    </p>
+</div>
+
+<div th:replace="fragments/layout :: baseFooter"></div>
+<div th:replace="fragments/layout :: pageScripts"></div>
+</body>
+</html>

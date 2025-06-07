@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: baseHead('Редактировать профиль репетитора')"></head>
+<body>
+<div th:replace="fragments/layout :: baseHeader"></div>
+
+<div th:replace="fragments/layout :: baseContent">
+    <h2>Редактировать профиль репетитора</h2>
+    <form th:action="@{/tutors/edit/{id}(id=${tutorId})}" th:object="${form}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <!-- userId скрыт -->
+        <input type="hidden" th:field="*{userId}" />
+
+        <div>
+            <label>Опыт (в годах):</label>
+            <input type="number" th:field="*{experience}" min="0" />
+            <div th:if="${#fields.hasErrors('experience')}" th:errors="*{experience}"></div>
+        </div>
+        <div>
+            <label>Описание:</label>
+            <textarea th:field="*{description}"></textarea>
+            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+        </div>
+        <div>
+            <label>Предметы:</label>
+            <div th:each="subj : ${subjects}">
+                <input type="checkbox" th:value="${subj.id}"
+                       th:field="*{subjectIds}"
+                       th:checked="${form.subjectIds.contains(subj.id)}" />
+                <span th:text="${subj.name}"></span><br/>
+            </div>
+            <div th:if="${#fields.hasErrors('subjectIds')}" th:errors="*{subjectIds}"></div>
+        </div>
+
+        <div th:if="${editError}">
+            <p style="color: red;" th:text="${editError}"></p>
+        </div>
+
+        <button type="submit">Сохранить</button>
+    </form>
+    <p>
+        <a th:href="@{/tutors}">Вернуться к списку репетиторов</a>
+    </p>
+</div>
+
+<div th:replace="fragments/layout :: baseFooter"></div>
+<div th:replace="fragments/layout :: pageScripts"></div>
+</body>
+</html>
