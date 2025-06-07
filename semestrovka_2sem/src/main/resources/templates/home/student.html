@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/layout :: baseHead('Поиск репетитора')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: baseHeader}"></div>
+<main>
+    <h2>Выбор предмета</h2>
+    <form th:action="@{/home/student}" method="post">
+        <div class="select-wrapper">
+            <select name="subjectId">
+                <option th:each="sub : ${subjects}" th:value="${sub.id}" th:text="${sub.name}"></option>
+            </select>
+        </div>
+        <button type="submit">Найти заявки</button>
+    </form>
+</main>
+<div th:replace="~{fragments/layout :: baseFooter}"></div>
+<div th:replace="~{fragments/layout :: pageScripts}"></div>
+</body>
+</html>
