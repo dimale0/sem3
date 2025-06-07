@@ -27,6 +27,12 @@
     <p id="responseResult" style="color: red;"></p>
   </div>
 
+  <div th:if="${#request.isUserInRole('TUTOR') and request.tutor.user.email == #authentication.principal.username}">
+    <p>
+      <a th:href="@{/responses/request/{id}(id=${request.id})}">Посмотреть отклики</a>
+    </p>
+  </div>
+
   <p>
     <a th:href="@{/requests}">Вернуться к списку заявок</a>
   </p>
