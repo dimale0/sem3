@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/layout :: baseHead('Кабинет репетитора')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: baseHeader}"></div>
+<main>
+    <h2>Кабинет репетитора</h2>
+    <ul>
+        <li><a th:href="@{/requests/create}">Создать новую заявку</a></li>
+        <li><a th:href="@{/requests/my}">Мои заявки</a></li>
+        <li><a th:href="@{/requests}">Список всех заявок</a></li>
+    </ul>
+</main>
+<div th:replace="~{fragments/layout :: baseFooter}"></div>
+<div th:replace="~{fragments/layout :: pageScripts}"></div>
+</body>
+</html>
