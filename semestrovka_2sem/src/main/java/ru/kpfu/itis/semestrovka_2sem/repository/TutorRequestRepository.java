@@ -1,5 +1,6 @@
 package ru.kpfu.itis.semestrovka_2sem.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,10 +11,12 @@ import java.util.List;
 
 @Repository
 public interface TutorRequestRepository extends JpaRepository<TutorRequest, Long> {
-    // Все заявки данного репетитора
+    /** Все заявки данного репетитора. Загружаем связанные сущности для избежания LazyInitializationException. */
+    @EntityGraph(attributePaths = {"tutor.user", "subject"})
     List<TutorRequest> findAllByTutor(Tutor tutor);
 
-    // Поиск по subject (принадлежность к Subject)
+    /** Поиск заявок по предмету. */
+    @EntityGraph(attributePaths = {"tutor.user", "subject"})
     List<TutorRequest> findAllBySubject_Name(String subjectName);
 
     // При необходимости: получить все заявки, у которых пока нет откликов
@@ -23,5 +26,11 @@ public interface TutorRequestRepository extends JpaRepository<TutorRequest, Long
              SELECT sr.tutorRequest.id FROM StudentResponse sr
          )
     """)
+    @EntityGraph(attributePaths = {"tutor.user", "subject"})
     List<TutorRequest> findAllWithoutResponses();
+
+    /** Получить все заявки вместе с репетитором и предметом. */
+    @EntityGraph(attributePaths = {"tutor.user", "subject"})
+    @Query("select tr from TutorRequest tr")
+    List<TutorRequest> findAllWithDetails();
 }
