@@ -5,12 +5,13 @@
 <head th:fragment="baseHead(pageTitle)">
     <meta charset="UTF-8" />
     <title th:text="${pageTitle}">Название</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" th:href="@{/css/main.css}" />
 </head>
 <body>
 <!-- Общий header -->
 <header th:fragment="baseHeader">
-    <nav>
+    <nav class="container">
         <a th:href="@{/}">Главная</a>
         <a th:href="@{/tutors}">Репетиторы</a>
         <a th:href="@{/requests}">Заявки</a>
@@ -28,9 +29,9 @@
         <span sec:authorize="isAuthenticated()" style="margin-left:auto">
             <span th:text="${#authentication.name}"></span>
             &nbsp;(
-            <form th:action="@{/logout}" method="post" style="display:inline">
+            <form th:action="@{/logout}" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <button type="submit" style="background:none; border:none; padding:0; margin:0; cursor:pointer; color:inherit; text-decoration:underline;">Выйти</button>
+                <button type="submit">Выйти</button>
             </form>
             )
         </span>
