@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
+import jakarta.persistence.EntityNotFoundException;
+
 
 @ControllerAdvice
 @Slf4j
@@ -19,6 +21,14 @@ public class GlobalExceptionHandler {
         return "error"; // templates/error.html
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleEntityNotFound(EntityNotFoundException ex, Model model) {
+        log.warn("Entity not found: {}", ex.getMessage());
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error";
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleGeneral(Exception ex, Model model) {
@@ -28,7 +38,6 @@ public class GlobalExceptionHandler {
             message = "Внутренняя ошибка приложения";
         }
         model.addAttribute("errorMessage", message);
-
         return "error";
     }
 }

@@ -86,7 +86,16 @@ public class TutorRequestController {
      */
     @PreAuthorize("hasRole('TUTOR')")
     @GetMapping("/create")
-    public String showCreateForm(Model model) {
+    public String showCreateForm(Authentication authentication, Model model) {
+        // Перед показом формы убедимся, что у пользователя есть профиль репетитора
+        User currentUser = userService.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+        Optional<Tutor> tutorOpt = tutorService.findByUser(currentUser);
+        if (tutorOpt.isEmpty()) {
+            // если профиль отсутствует, направляем на его создание
+            return "redirect:/tutors/create";
+        }
+
         model.addAttribute("form", new TutorRequestCreateDto());
         model.addAttribute("subjects", subjectService.findAll());
         return "request/create"; // src/main/resources/templates/request/create.html

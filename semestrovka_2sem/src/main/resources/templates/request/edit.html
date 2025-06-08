@@ -32,7 +32,6 @@
       <input id="duration" type="number" th:field="*{duration}" min="1" />
       <span class="error-message" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></span>
     </div>
-
     <div class="form-group">
       <label for="description">Описание</label>
       <textarea id="description" th:field="*{description}"></textarea>
