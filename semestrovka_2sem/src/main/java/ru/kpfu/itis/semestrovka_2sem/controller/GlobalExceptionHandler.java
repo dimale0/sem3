@@ -23,7 +23,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleGeneral(Exception ex, Model model) {
         log.error("Unexpected error", ex);
-        model.addAttribute("errorMessage", "Внутренняя ошибка приложения");
+        String message = ex.getMessage();
+        if (message == null || message.isBlank()) {
+            message = "Внутренняя ошибка приложения";
+        }
+        model.addAttribute("errorMessage", message);
+
         return "error";
     }
 }

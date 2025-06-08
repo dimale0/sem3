@@ -23,6 +23,10 @@
     </div>
     <div class="form-group" th:classappend="${#fields.hasErrors('subjectIds')}? ' error'">
       <label>Предметы:</label>
+      <!-- скрытое поле нужно, чтобы при отсутствии выбранных чекбоксов
+           параметр всё равно передавался и binder не присваивал null -->
+      <input type="hidden" th:field="*{subjectIds}" />
+
       <div class="checkbox-list">
         <label class="checkbox-item" th:each="subj : ${subjects}">
           <input type="checkbox" th:value="${subj.id}" th:field="*{subjectIds}" />
