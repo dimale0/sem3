@@ -33,6 +33,7 @@
                       and #request.isUserInRole('TUTOR')
                       and req.tutor.user.email == #authentication.principal.username}">
             &nbsp;|&nbsp;
+
             <a th:href="@{/responses/request/{id}(id=${req.id})}">Отклики</a>
             &nbsp;|&nbsp;
             <a th:href="@{/requests/edit/{id}(id=${req.id})}">Ред.</a>
