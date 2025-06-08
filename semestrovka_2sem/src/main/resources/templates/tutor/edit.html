@@ -25,6 +25,7 @@
             <label>Предметы:</label>
             <!-- скрытое поле для передачи пустого набора, если ничего не выбрано -->
             <input type="hidden" th:field="*{subjectIds}" />
+
             <div class="checkbox-list">
                 <label class="checkbox-item" th:each="subj : ${subjects}">
                     <input type="checkbox" th:value="${subj.id}" th:field="*{subjectIds}" th:checked="${form.subjectIds.contains(subj.id)}" />
