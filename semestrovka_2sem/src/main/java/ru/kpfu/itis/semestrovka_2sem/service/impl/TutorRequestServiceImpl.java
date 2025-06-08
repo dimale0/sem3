@@ -51,8 +51,14 @@ public class TutorRequestServiceImpl implements TutorRequestService {
                 throw new IllegalArgumentException("Название предмета не задано");
             }
             subjName = subjName.trim();
+            String finalSubjName = subjName;
             subject = subjectRepository.findByName(subjName)
+<<<<<<< Updated upstream
                     .orElseGet(() -> subjectRepository.save(Subject.builder().name(subjName).build()));
+=======
+                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(finalSubjName).build()));
+
+>>>>>>> Stashed changes
         }
 
         // 3) Проверка price > 0
