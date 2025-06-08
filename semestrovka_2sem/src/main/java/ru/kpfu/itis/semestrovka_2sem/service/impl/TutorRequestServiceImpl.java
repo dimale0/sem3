@@ -132,6 +132,7 @@ public class TutorRequestServiceImpl implements TutorRequestService {
         } else if (updateDto.getSubjectName() != null && !updateDto.getSubjectName().isBlank()) {
             String subjName = updateDto.getSubjectName().trim();
             newSubject = subjectRepository.findByNameIgnoreCase(subjName)
+
                     .orElseGet(() -> subjectRepository.save(Subject.builder().name(subjName).build()));
         }
         if (newSubject != null && !existing.getSubject().getId().equals(newSubject.getId())) {
