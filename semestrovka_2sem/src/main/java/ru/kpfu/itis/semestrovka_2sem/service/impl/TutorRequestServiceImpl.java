@@ -51,10 +51,8 @@ public class TutorRequestServiceImpl implements TutorRequestService {
                 throw new IllegalArgumentException("Название предмета не задано");
             }
             subjName = subjName.trim();
-            String finalSubjName = subjName;
-            subject = subjectRepository.findByName(subjName)
-                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(finalSubjName).build()));
-
+            subject = subjectRepository.findByNameIgnoreCase(subjName)
+                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(subjName).build()));
         }
 
         // 3) Проверка price > 0
@@ -133,7 +131,8 @@ public class TutorRequestServiceImpl implements TutorRequestService {
                             "Subject с ID " + updateDto.getSubjectId() + " не найден"));
         } else if (updateDto.getSubjectName() != null && !updateDto.getSubjectName().isBlank()) {
             String subjName = updateDto.getSubjectName().trim();
-            newSubject = subjectRepository.findByName(subjName)
+            newSubject = subjectRepository.findByNameIgnoreCase(subjName)
+
                     .orElseGet(() -> subjectRepository.save(Subject.builder().name(subjName).build()));
         }
         if (newSubject != null && !existing.getSubject().getId().equals(newSubject.getId())) {

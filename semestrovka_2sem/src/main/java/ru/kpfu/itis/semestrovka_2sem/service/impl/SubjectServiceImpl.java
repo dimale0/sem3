@@ -27,7 +27,7 @@ public class SubjectServiceImpl implements SubjectService {
             throw new IllegalArgumentException("Название предмета не может быть пустым");
         }
         // 2) Проверяем, что нет дублирующего имени
-        Optional<Subject> byName = subjectRepository.findByName(name.trim());
+        Optional<Subject> byName = subjectRepository.findByNameIgnoreCase(name.trim());
         if (byName.isPresent()) {
             throw new IllegalArgumentException("Предмет с именем \"" + name + "\" уже существует");
         }
@@ -44,6 +44,11 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Optional<Subject> findByName(String name) {
         return subjectRepository.findByName(name);
+    }
+
+    @Override
+    public Optional<Subject> findByNameIgnoreCase(String name) {
+        return subjectRepository.findByNameIgnoreCase(name);
     }
 
     @Override
@@ -65,7 +70,7 @@ public class SubjectServiceImpl implements SubjectService {
         // 3) Если имя реально изменилось, проверим, что его нет в базе
         if (!existing.getName().equals(newName)) {
             String finalNewName = newName;
-            subjectRepository.findByName(newName).ifPresent(s -> {
+            subjectRepository.findByNameIgnoreCase(newName).ifPresent(s -> {
                 throw new IllegalArgumentException("Другой предмет с именем \"" + finalNewName + "\" уже существует");
             });
             existing.setName(newName);

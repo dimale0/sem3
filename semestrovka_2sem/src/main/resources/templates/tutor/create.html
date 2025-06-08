@@ -27,7 +27,6 @@
     <div class="form-group" th:classappend="${#fields.hasErrors('subjectIds')}? ' error'">
       <label>Предметы:</label>
       <!-- удалили скрытое поле subjectIds, контроллер обработает null -->
-
       <div class="checkbox-list">
         <label class="checkbox-item" th:each="subj : ${subjects}">
           <input type="checkbox" th:value="${subj.id}" th:field="*{subjectIds}" />
