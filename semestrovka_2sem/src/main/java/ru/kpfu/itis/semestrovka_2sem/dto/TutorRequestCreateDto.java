@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class TutorRequestCreateDto {
 
-    @NotNull(message = "Tutor ID обязателен")
+    // ID репетитора будет подставлен контроллером, поэтому не валидируем здесь
     private Long tutorId;
 
     // Идентификатор предмета, если выбираем существующий

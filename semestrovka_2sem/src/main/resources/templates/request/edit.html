@@ -8,8 +8,6 @@
   <h2>Редактировать заявку</h2>
   <form th:action="@{/requests/edit/{id}(id=${requestId})}" th:object="${form}" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <!-- tutorId скрыт -->
-    <input type="hidden" th:field="*{tutorId}" />
 
     <div class="form-group" th:classappend="${#fields.hasErrors('subjectName')}? ' error'">
       <label for="subjectName">Предмет</label>
