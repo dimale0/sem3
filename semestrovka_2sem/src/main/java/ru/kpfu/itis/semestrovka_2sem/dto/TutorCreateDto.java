@@ -3,6 +3,7 @@ package ru.kpfu.itis.semestrovka_2sem.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import ru.kpfu.itis.semestrovka_2sem.validation.ValidTutorSubjects;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@ValidTutorSubjects
 public class TutorCreateDto {
 
     @NotNull(message = "ID пользователя обязателен")
@@ -22,8 +24,9 @@ public class TutorCreateDto {
     private String description;
 
     // Список выбранных предметов. Может быть пустым, если пользователь
-    // вводит название нового предмета вручную. Проверка на пустое значение
-    // выполняется в сервисе при сохранении профиля.
+    // вводит название нового предмета вручную. @NotNull гарантирует, что
+    // набор передаётся в сервис в любом случае.
+    @NotNull(message = "Набор предметов не может быть null")
     private Set<Long> subjectIds = new java.util.HashSet<>();
 
     /** Дополнительный предмет, если его нет в списке */
