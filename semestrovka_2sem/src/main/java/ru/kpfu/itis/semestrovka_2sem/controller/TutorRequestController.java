@@ -1,12 +1,14 @@
 // src/main/java/ru/kpfu/itis/semestrovka_2sem/controller/TutorRequestController.java
 package ru.kpfu.itis.semestrovka_2sem.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.semestrovka_2sem.dto.StudentResponseCreateDto;
 import ru.kpfu.itis.semestrovka_2sem.dto.TutorRequestCreateDto;
@@ -96,10 +98,15 @@ public class TutorRequestController {
     @PreAuthorize("hasRole('TUTOR')")
     @PostMapping("/create")
     public String processCreate(
-            @ModelAttribute("form") TutorRequestCreateDto form,
+            @Valid @ModelAttribute("form") TutorRequestCreateDto form,
+            BindingResult bindingResult,
             Authentication authentication,
             Model model
     ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("subjects", subjectService.findAll());
+            return "request/create";
+        }
         try {
             User currentUser = userService.findByEmail(authentication.getName())
                     .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
@@ -150,7 +157,8 @@ public class TutorRequestController {
     @PostMapping("/edit/{id}")
     public String processEdit(
             @PathVariable Long id,
-            @ModelAttribute("form") TutorRequestCreateDto form,
+            @Valid @ModelAttribute("form") TutorRequestCreateDto form,
+            BindingResult bindingResult,
             Authentication authentication,
             Model model
     ) {
@@ -158,6 +166,11 @@ public class TutorRequestController {
                 .orElseThrow(() -> new IllegalArgumentException("Заявка не найдена"));
         if (!existing.getTutor().getUser().getEmail().equals(authentication.getName())) {
             return "redirect:/requests";
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("subjects", subjectService.findAll());
+            model.addAttribute("requestId", id);
+            return "request/edit";
         }
         try {
             form.setTutorId(existing.getTutor().getId());
