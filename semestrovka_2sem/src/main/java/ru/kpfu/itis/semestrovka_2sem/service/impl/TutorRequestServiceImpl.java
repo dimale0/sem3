@@ -52,13 +52,10 @@ public class TutorRequestServiceImpl implements TutorRequestService {
             }
             subjName = subjName.trim();
             String finalSubjName = subjName;
+            String finalSubjName1 = subjName;
             subject = subjectRepository.findByName(subjName)
-<<<<<<< Updated upstream
-                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(subjName).build()));
-=======
-                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(finalSubjName).build()));
+                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(finalSubjName1).build()));
 
->>>>>>> Stashed changes
         }
 
         // 3) Проверка price > 0
