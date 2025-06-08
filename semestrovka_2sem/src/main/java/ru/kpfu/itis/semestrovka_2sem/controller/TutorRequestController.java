@@ -3,6 +3,7 @@ package ru.kpfu.itis.semestrovka_2sem.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.kpfu.itis.semestrovka_2sem.dto.StudentResponseCreateDto;
 import ru.kpfu.itis.semestrovka_2sem.dto.TutorRequestCreateDto;
 import ru.kpfu.itis.semestrovka_2sem.model.TutorRequest;
@@ -28,6 +30,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/requests")
 @RequiredArgsConstructor
+@Slf4j
 public class TutorRequestController {
 
     private final TutorRequestService tutorRequestService;
@@ -96,7 +99,10 @@ public class TutorRequestController {
             return "redirect:/tutors/create";
         }
 
-        model.addAttribute("form", new TutorRequestCreateDto());
+        if (!model.containsAttribute("form")) {
+            model.addAttribute("form", new TutorRequestCreateDto());
+        }
+
         model.addAttribute("subjects", subjectService.findAll());
         return "request/create"; // src/main/resources/templates/request/create.html
     }
@@ -110,7 +116,8 @@ public class TutorRequestController {
             @Valid @ModelAttribute("form") TutorRequestCreateDto form,
             BindingResult bindingResult,
             Authentication authentication,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("subjects", subjectService.findAll());
@@ -121,12 +128,15 @@ public class TutorRequestController {
                     .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
             Optional<Tutor> tutorOpt = tutorService.findByUser(currentUser);
             if (tutorOpt.isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Сначала создайте профиль репетитора");
                 return "redirect:/tutors/create";
             }
             Tutor tutor = tutorOpt.get();
             form.setTutorId(tutor.getId());
             tutorRequestService.create(form);
         } catch (Exception ex) {
+            log.error("Error creating tutor request", ex);
             model.addAttribute("creationError", ex.getMessage());
             model.addAttribute("subjects", subjectService.findAll());
             return "request/create";

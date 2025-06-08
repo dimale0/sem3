@@ -6,6 +6,9 @@
 
 <main>
   <h2>Создать профиль репетитора</h2>
+  <div th:if="${errorMessage}">
+    <p class="error-message" th:text="${errorMessage}"></p>
+  </div>
   <form th:action="@{/tutors/create}" th:object="${form}" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <!-- userId скрыт и устанавливается в контроллере -->

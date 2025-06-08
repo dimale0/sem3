@@ -6,6 +6,9 @@
 
 <main>
   <h2>Создать новую заявку</h2>
+  <div th:if="${errorMessage}">
+    <p class="error-message" th:text="${errorMessage}"></p>
+  </div>
   <form th:action="@{/requests/create}" th:object="${form}" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
