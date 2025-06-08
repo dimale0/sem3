@@ -29,8 +29,9 @@
       <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
       <td>
         <a th:href="@{/requests/view/{id}(id=${req.id})}">Детали</a>
-        <span th:if="${#request.isUserInRole('TUTOR') and req.tutor.user.email == #authentication.principal.username}">
-            &nbsp;|&nbsp;
+          <span th:if="${#request.isUserInRole('TUTOR')
+              and req?.tutor?.user?.email
+              and req.tutor.user.email.equals(#authentication?.principal?.username)}">            &nbsp;|&nbsp;
             <a th:href="@{/responses/request/{id}(id=${req.id})}">Отклики</a>
             &nbsp;|&nbsp;
             <a th:href="@{/requests/edit/{id}(id=${req.id})}">Ред.</a>
