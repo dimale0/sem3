@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/layout :: baseHeader"></div>
 
-<div th:replace="fragments/layout :: baseContent">
+<main>
   <h2>Детали заявки</h2>
   <div>
     <p><strong>ID:</strong> <span th:text="${request.id}"></span></p>
@@ -27,11 +27,16 @@
     <p id="responseResult" style="color: red;"></p>
   </div>
 
+  <div th:if="${#request.isUserInRole('TUTOR') and request.tutor.user.email == #authentication.principal.username}">
+    <p>
+      <a th:href="@{/responses/request/{id}(id=${request.id})}">Посмотреть отклики</a>
+    </p>
+  </div>
+
   <p>
     <a th:href="@{/requests}">Вернуться к списку заявок</a>
   </p>
-</div>
-
+</main>
 <div th:replace="fragments/layout :: baseFooter"></div>
 
 <div th:replace="fragments/layout :: pageScripts">

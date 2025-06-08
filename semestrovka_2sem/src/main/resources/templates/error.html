@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head th:replace="~{fragments/layout :: baseHead('Ошибка')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: baseHeader}"></div>
+<main>
+  <h2>Произошла ошибка</h2>
+  <p th:text="${errorMessage}">Неизвестная ошибка</p>
+  <p><a th:href="@{/}">На главную</a></p>
+</main>
+<div th:replace="~{fragments/layout :: baseFooter}"></div>
+<div th:replace="~{fragments/layout :: pageScripts}"></div>
+</body>
+</html>
+

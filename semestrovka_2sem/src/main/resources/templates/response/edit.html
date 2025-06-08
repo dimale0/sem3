@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/layout :: baseHeader"></div>
 
-<div th:replace="fragments/layout :: baseContent">
+<main>
   <h2>Редактировать отклик</h2>
   <form th:action="@{/responses/edit/{id}(id=${responseId})}" th:object="${form}" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -27,8 +27,7 @@
   <p>
     <a th:href="@{/responses/student/{studentId}(studentId=${form.studentId})}">Вернуться к моим откликам</a>
   </p>
-</div>
-
+</main>
 <div th:replace="fragments/layout :: baseFooter"></div>
 <div th:replace="fragments/layout :: pageScripts"></div>
 </body>
