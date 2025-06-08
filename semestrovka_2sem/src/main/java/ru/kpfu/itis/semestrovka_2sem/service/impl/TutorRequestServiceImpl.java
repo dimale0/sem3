@@ -53,7 +53,8 @@ public class TutorRequestServiceImpl implements TutorRequestService {
             subjName = subjName.trim();
             final String finalSubjName = subjName;
             subject = subjectRepository.findByNameIgnoreCase(finalSubjName)
-                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(finalSubjName).build()));
+                    .orElseGet(() -> subjectRepository.saveAndFlush(
+                            Subject.builder().name(finalSubjName).build()));
         }
 
         // 3) Проверка price > 0
@@ -78,7 +79,7 @@ public class TutorRequestServiceImpl implements TutorRequestService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return tutorRequestRepository.save(entity);
+        return tutorRequestRepository.saveAndFlush(entity);
     }
 
     @Override
@@ -135,7 +136,8 @@ public class TutorRequestServiceImpl implements TutorRequestService {
             final String finalSubjName = subjName;
             newSubject = subjectRepository.findByNameIgnoreCase(finalSubjName)
 
-                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(finalSubjName).build()));
+                    .orElseGet(() -> subjectRepository.saveAndFlush(
+                            Subject.builder().name(finalSubjName).build()));
         }
         if (newSubject != null && !existing.getSubject().getId().equals(newSubject.getId())) {
             existing.setSubject(newSubject);
@@ -158,7 +160,7 @@ public class TutorRequestServiceImpl implements TutorRequestService {
         // Обновляем описание
         existing.setDescription(updateDto.getDescription());
 
-        return tutorRequestRepository.save(existing);
+        return tutorRequestRepository.saveAndFlush(existing);
     }
 
     @Override
