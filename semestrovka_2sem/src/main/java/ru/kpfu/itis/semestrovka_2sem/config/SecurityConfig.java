@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.kpfu.itis.semestrovka_2sem.model.User;
 import ru.kpfu.itis.semestrovka_2sem.service.UserService;
+import ru.kpfu.itis.semestrovka_2sem.config.RoleBasedSuccessHandler;
 
 @Configuration
 @EnableMethodSecurity
@@ -20,6 +21,7 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleBasedSuccessHandler successHandler;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -62,6 +64,9 @@ public class SecurityConfig {
                         // Разрешаем регистрацию и статику:
                         .requestMatchers("/", "/users/register", "/css/**", "/js/**", "/favicon.ico").permitAll()
 
+                        // Доступные всем страницы просмотра
+                        .requestMatchers(HttpMethod.GET, "/tutors", "/tutors/*", "/subjects", "/requests", "/requests/view/**").permitAll()
+
                         // Примеры ограничения по ролям:
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/tutors/create/**", "/tutors/edit/**", "/tutors/delete/**").hasRole("TUTOR")
@@ -69,7 +74,7 @@ public class SecurityConfig {
                         .requestMatchers("/requests/create/**", "/requests/edit/**", "/requests/delete/**").hasRole("TUTOR")
                         .requestMatchers("/requests/*/respond").hasRole("STUDENT")
                         .requestMatchers("/responses/student/**").hasRole("STUDENT")
-                        .requestMatchers("/responses/request/**").hasRole("TUTOR")
+                        .requestMatchers("/responses/request/**", "/responses/tutor/**").hasRole("TUTOR")
 
                         // Любые остальные запросы — только для аутентифицированных:
                         .anyRequest().authenticated()
@@ -79,7 +84,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")          // наш GET-эндпоинт, который возвращает auth/login.html
                         .loginProcessingUrl("/login") // URL, на который будет отправляться POST с username/password
-                        .defaultSuccessUrl("/requests", true)
+                        .successHandler(successHandler)
                         .failureUrl("/login?error")   // при ошибке добавляется ?error
                         .permitAll()
                 )

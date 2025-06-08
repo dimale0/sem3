@@ -41,11 +41,24 @@ public class TutorServiceImpl implements TutorService {
             throw new IllegalArgumentException("Профиль Tutor для этого пользователя уже существует");
         }
 
-        // 2) Загрузим и проверим Subject
-        Set<Subject> subjects = dto.getSubjectIds().stream()
-                .map(id -> subjectRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException("Subject с ID " + id + " не найден")))
-                .collect(Collectors.toSet());
+        // 2) Собираем список предметов: выбранные + возможно новый
+        Set<Subject> subjects = dto.getSubjectIds() == null ?
+                new java.util.HashSet<>() :
+                dto.getSubjectIds().stream()
+                        .map(id -> subjectRepository.findById(id)
+                                .orElseThrow(() -> new EntityNotFoundException("Subject с ID " + id + " не найден")))
+                        .collect(Collectors.toSet());
+
+        if (dto.getNewSubjectName() != null && !dto.getNewSubjectName().isBlank()) {
+            String name = dto.getNewSubjectName().trim();
+            Subject extra = subjectRepository.findByName(name)
+                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(name).build()));
+            subjects.add(extra);
+        }
+
+        if (subjects.isEmpty()) {
+            throw new IllegalArgumentException("Нужно выбрать хотя бы один предмет");
+        }
 
         // 3) Собираем сущность Tutor
         Tutor tutor = new Tutor();
@@ -81,11 +94,24 @@ public class TutorServiceImpl implements TutorService {
         existing.setExperience(dto.getExperience());
         existing.setDescription(dto.getDescription());
 
-        // Перезагружаем Subject
-        Set<Subject> newSubjects = dto.getSubjectIds().stream()
-                .map(id -> subjectRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException("Subject с ID " + id + " не найден")))
-                .collect(Collectors.toSet());
+        // Перезагружаем Subject + возможно добавляем новый
+        Set<Subject> newSubjects = dto.getSubjectIds() == null ?
+                new java.util.HashSet<>() :
+                dto.getSubjectIds().stream()
+                        .map(id -> subjectRepository.findById(id)
+                                .orElseThrow(() -> new EntityNotFoundException("Subject с ID " + id + " не найден")))
+                        .collect(Collectors.toSet());
+
+        if (dto.getNewSubjectName() != null && !dto.getNewSubjectName().isBlank()) {
+            String name = dto.getNewSubjectName().trim();
+            Subject extra = subjectRepository.findByName(name)
+                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(name).build()));
+            newSubjects.add(extra);
+        }
+
+        if (newSubjects.isEmpty()) {
+            throw new IllegalArgumentException("Нужно выбрать хотя бы один предмет");
+        }
         existing.setSubjects(newSubjects);
 
         return tutorRepository.save(existing);
@@ -98,5 +124,10 @@ public class TutorServiceImpl implements TutorService {
             throw new EntityNotFoundException("Tutor с ID " + id + " не найден");
         }
         tutorRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Tutor> findByUser(User user) {
+        return tutorRepository.findByUser(user);
     }
 }

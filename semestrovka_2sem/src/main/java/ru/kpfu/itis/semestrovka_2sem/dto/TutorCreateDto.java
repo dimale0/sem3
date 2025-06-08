@@ -21,6 +21,12 @@ public class TutorCreateDto {
     @Size(max = 1000, message = "Описание максимум 1000 символов")
     private String description;
 
-    @NotNull(message = "Набор предметов не может быть null")
-    private Set<Long> subjectIds;
+    // Список выбранных предметов. Может быть пустым, если пользователь
+    // вводит название нового предмета вручную. Проверка на пустое значение
+    // выполняется в сервисе при сохранении профиля.
+    private Set<Long> subjectIds = new java.util.HashSet<>();
+
+    /** Дополнительный предмет, если его нет в списке */
+    @Size(max = 100, message = "Название предмета максимум 100 символов")
+    private String newSubjectName;
 }
