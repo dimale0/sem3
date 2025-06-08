@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import ru.kpfu.itis.semestrovka_2sem.validation.SubjectIdOrNameRequired;
 
 @Getter
 @Setter
+@SubjectIdOrNameRequired
 public class TutorRequestCreateDto {
 
     // ID репетитора будет подставлен контроллером, поэтому не валидируем здесь
