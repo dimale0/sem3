@@ -51,9 +51,9 @@ public class TutorServiceImpl implements TutorService {
 
         if (dto.getNewSubjectName() != null && !dto.getNewSubjectName().isBlank()) {
             String name = dto.getNewSubjectName().trim();
-            Subject extra = subjectRepository.findByNameIgnoreCase(name)
-
-                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(name).build()));
+            final String finalName = name;
+            Subject extra = subjectRepository.findByNameIgnoreCase(finalName)
+                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(finalName).build()));
             subjects.add(extra);
         }
 
@@ -105,8 +105,9 @@ public class TutorServiceImpl implements TutorService {
 
         if (dto.getNewSubjectName() != null && !dto.getNewSubjectName().isBlank()) {
             String name = dto.getNewSubjectName().trim();
-            Subject extra = subjectRepository.findByNameIgnoreCase(name)
-                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(name).build()));
+            final String finalName = name;
+            Subject extra = subjectRepository.findByNameIgnoreCase(finalName)
+                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(finalName).build()));
             newSubjects.add(extra);
         }
 
