@@ -2,19 +2,20 @@
    CSS Variables (Color Palette)
    ============================== */
 :root {
-    --color-primary: #9b59b6;
-    --color-secondary: #8e44ad;
-    --color-accent:   #e91e63;
-    --color-background: #000;
-    --color-surface:  #1a1a1a;
+    --color-primary: #bb34ff;
+    --color-secondary: #7e22ce;
+    --color-accent:   #d946ef;
+    --color-background: #0a0a0a;
+    --color-surface:  #121212;
     --color-text-primary:   #e6e6e6;
     --color-text-secondary: #bbbbbb;
-    --color-border:  #444;
+    --color-border:  #333;
     --color-error:   #e74c3c;
     --color-error-bg:#fdeded;
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 12px;
+    --gradient-header: linear-gradient(90deg,#0a0a0a,#2e026d);
 }
 
 /* ==============================
@@ -26,8 +27,8 @@ html{font-size:16px;scroll-behavior:smooth}
 html,body{height:100%}                     /* для «липкого» футера */
 body{
     display:flex;flex-direction:column;
-    font-family:'Roboto','Helvetica Neue',Arial,sans-serif;
-    background:var(--color-background);
+    font-family:'Inter','Roboto','Helvetica Neue',Arial,sans-serif;
+    background:linear-gradient(180deg,#0a0a0a,#1a1a1a);
     color:var(--color-text-primary);
     line-height:1.6;
 }
@@ -39,7 +40,7 @@ main{
     max-width:1200px;
     margin:0 auto;
     padding:2rem 1rem;
-    background:var(--color-background);
+    background:transparent;
 }
 footer{flex-shrink:0}
 
@@ -57,6 +58,7 @@ h1,h2,h3,h4,h5,h6{color:var(--color-primary);margin-bottom:.5rem;font-weight:700
 h1{font-size:2.5rem}h2{font-size:2rem}h3{font-size:1.75rem}
 h4{font-size:1.5rem}h5{font-size:1.25rem}h6{font-size:1rem}
 p{margin-bottom:1rem;color:var(--color-text-secondary)}
+.hero h1{font-size:3rem;margin-bottom:1rem}
 
 /* ==============================
    Links
@@ -68,9 +70,11 @@ a:hover,a:focus{color:var(--color-primary);text-decoration:underline}
    Header & Navigation
    ============================== */
 header{
-    background:var(--color-surface);
+    background:var(--gradient-header);
     border-bottom:1px solid var(--color-border);
-    box-shadow:0 2px 4px rgba(0,0,0,.05);
+    box-shadow:0 2px 4px rgba(0,0,0,.2);
+    position:sticky;top:0;z-index:100;
+    backdrop-filter:blur(8px);
 }
 
 /* — шапка: flex-размещение — */
@@ -81,6 +85,7 @@ header nav{
     flex-wrap:nowrap;            /* запрещаем перенос строк */
     overflow:hidden;             /* ничего не «вылезает» вправо */
 }
+header nav a{color:var(--color-text-primary);font-weight:500}
 
 /* «Главная» уходит влево, всё остальное — вправо */
 header nav>a:first-child{margin-right:auto}
@@ -115,6 +120,11 @@ header nav form button{
 /* используется общий контейнер main */
 main h1,main h2{text-align:center;margin-bottom:1.5rem}
 
+.hero{
+    text-align:center;padding:4rem 1rem;
+}
+.hero-actions{margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+
 /* ==============================
    Form
    ============================== */
@@ -126,7 +136,7 @@ form{
 .form-group{margin-bottom:1.5rem;position:relative}
 form label{
     display:block;margin-bottom:.5rem;color:var(--color-text-primary);
-    font:700 1.125rem/1.2 'Roboto','Helvetica Neue',Arial,sans-serif;
+    font:700 1.125rem/1.2 'Inter','Roboto','Helvetica Neue',Arial,sans-serif;
     letter-spacing:.02em;text-transform:capitalize
 }
 form input[type="text"],
@@ -189,15 +199,18 @@ form select{
 /* ==============================
    Button
    ============================== */
-form button,
-form .btn{
-    display:block;width:100%;padding:1rem 0;font-size:1.125rem;font-weight:700;
-    color:#fff;background:var(--color-secondary);border:0;border-radius:var(--radius-sm);
-    cursor:pointer;transition:background .2s,transform .1s;text-align:center
+button,
+.btn{
+    display:inline-block;padding:.75rem 1.5rem;font-size:1rem;font-weight:600;
+    color:#fff;background:var(--color-primary);border:0;border-radius:var(--radius-sm);
+    cursor:pointer;text-align:center;transition:background .2s,transform .1s
 }
-form button:hover,form button:focus,
-form .btn:hover,form .btn:focus{background:var(--color-primary);outline:none}
-form button:active,form .btn:active{transform:translateY(1px)}
+button:hover,button:focus,
+.btn:hover,.btn:focus{background:var(--color-secondary);outline:none}
+button:active,.btn:active{transform:translateY(1px)}
+
+.btn-outline{background:transparent;color:var(--color-primary);border:1px solid var(--color-primary)}
+.btn-outline:hover,.btn-outline:focus{background:var(--color-primary);color:#fff}
 
 /* ==============================
    Table

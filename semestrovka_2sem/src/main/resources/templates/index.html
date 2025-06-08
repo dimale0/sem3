@@ -9,18 +9,17 @@
 <div th:replace="~{fragments/layout :: baseHeader}"></div>
 
 <!-- 2) Собственный контент главной страницы — без th:replace на baseContent -->
-<main>
-  <h2>Добро пожаловать на сайт репетиторов</h2>
-  <p>Здесь вы можете:</p>
-  <ul>
-    <li><a th:href="@{/tutors}">Смотреть список репетиторов</a></li>
-    <li><a th:href="@{/requests}">Смотреть список заявок</a></li>
-    <!-- Если пользователь анонимен, показываем ссылки "Войти/Зарегистрироваться" -->
-    <li sec:authorize="isAnonymous()">
-      <a th:href="@{/login}">Войти</a> или
-      <a th:href="@{/users/register}">Зарегистрироваться</a>
-    </li>
-  </ul>
+<main class="hero">
+  <h1>Добро пожаловать на сервис репетиторов</h1>
+  <p>Находите преподавателей и оставляйте заявки в пару кликов</p>
+  <div class="hero-actions">
+    <a class="btn" th:href="@{/tutors}">Репетиторы</a>
+    <a class="btn-outline" th:href="@{/requests}">Заявки</a>
+    <span sec:authorize="isAnonymous()">
+      <a class="btn-outline" th:href="@{/login}">Войти</a>
+      <a class="btn-outline" th:href="@{/users/register}">Регистрация</a>
+    </span>
+  </div>
 </main>
 
 <!-- 3) Вставляем подвал -->
