@@ -24,7 +24,7 @@
       </td>
       <td th:text="${resp.student.email}"></td>
       <td th:text="${resp.message}"></td>
-      <td th:text="${#dates.format(resp.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+      <td th:text="${#temporals.format(resp.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
     </tr>
     </tbody>
   </table>
