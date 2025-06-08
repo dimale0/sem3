@@ -148,7 +148,7 @@ public class TutorRequestController {
         }
         TutorRequestCreateDto dto = new TutorRequestCreateDto();
         dto.setTutorId(existing.getTutor().getId());
-        dto.setSubjectId(existing.getSubject().getId());
+        dto.setSubjectName(existing.getSubject().getName());
         dto.setPrice(existing.getPrice());
         dto.setDuration(existing.getDuration());
         dto.setDescription(existing.getDescription());

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
 import jakarta.persistence.EntityNotFoundException;
 
+
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
