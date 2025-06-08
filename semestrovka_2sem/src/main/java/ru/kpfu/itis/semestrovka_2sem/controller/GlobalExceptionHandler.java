@@ -28,6 +28,7 @@ public class GlobalExceptionHandler {
             message = "Внутренняя ошибка приложения";
         }
         model.addAttribute("errorMessage", message);
+
         return "error";
     }
 }
