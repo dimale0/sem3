@@ -89,7 +89,7 @@ public class TutorRequestServiceImpl implements TutorRequestService {
 
     @Override
     public List<TutorRequest> findAll() {
-        return tutorRequestRepository.findAll();
+        return tutorRequestRepository.findAllWithDetails();
     }
 
     @Override
