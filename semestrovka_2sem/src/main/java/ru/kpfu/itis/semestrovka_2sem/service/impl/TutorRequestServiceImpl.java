@@ -39,13 +39,21 @@ public class TutorRequestServiceImpl implements TutorRequestService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Tutor с ID " + createDto.getTutorId() + " не найден"));
 
-        // 2) Проверка Subject
-        if (createDto.getSubjectId() == null) {
-            throw new IllegalArgumentException("SubjectId не задан");
+        // 2) Определяем Subject: либо по ID, либо по имени
+        Subject subject;
+        if (createDto.getSubjectId() != null) {
+            subject = subjectRepository.findById(createDto.getSubjectId())
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "Subject с ID " + createDto.getSubjectId() + " не найден"));
+        } else {
+            String subjName = createDto.getSubjectName();
+            if (subjName == null || subjName.isBlank()) {
+                throw new IllegalArgumentException("Название предмета не задано");
+            }
+            subjName = subjName.trim();
+            subject = subjectRepository.findByName(subjName)
+                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(subjName).build()));
         }
-        Subject subject = subjectRepository.findById(createDto.getSubjectId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Subject с ID " + createDto.getSubjectId() + " не найден"));
 
         // 3) Проверка price > 0
         if (createDto.getPrice() == null || createDto.getPrice() <= 0) {
@@ -79,7 +87,7 @@ public class TutorRequestServiceImpl implements TutorRequestService {
 
     @Override
     public List<TutorRequest> findAll() {
-        return tutorRequestRepository.findAll();
+        return tutorRequestRepository.findAllWithDetails();
     }
 
     @Override
@@ -116,13 +124,17 @@ public class TutorRequestServiceImpl implements TutorRequestService {
         }
 
         // Проверяем и, если нужно, меняем Subject
-        if (updateDto.getSubjectId() == null) {
-            throw new IllegalArgumentException("SubjectId обязателен при обновлении");
-        }
-        if (!existing.getSubject().getId().equals(updateDto.getSubjectId())) {
-            Subject newSubject = subjectRepository.findById(updateDto.getSubjectId())
+        Subject newSubject = null;
+        if (updateDto.getSubjectId() != null) {
+            newSubject = subjectRepository.findById(updateDto.getSubjectId())
                     .orElseThrow(() -> new EntityNotFoundException(
                             "Subject с ID " + updateDto.getSubjectId() + " не найден"));
+        } else if (updateDto.getSubjectName() != null && !updateDto.getSubjectName().isBlank()) {
+            String subjName = updateDto.getSubjectName().trim();
+            newSubject = subjectRepository.findByName(subjName)
+                    .orElseGet(() -> subjectRepository.save(Subject.builder().name(subjName).build()));
+        }
+        if (newSubject != null && !existing.getSubject().getId().equals(newSubject.getId())) {
             existing.setSubject(newSubject);
         }
 
