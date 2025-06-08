@@ -8,7 +8,10 @@ import java.util.Optional;
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
-    // Найти предмет по имени (если нужно)
+    // Найти предмет по точному имени
     Optional<Subject> findByName(String name);
+
+    // Поиск без учёта регистра, чтобы избежать дублей
+    Optional<Subject> findByNameIgnoreCase(String name);
 }
 

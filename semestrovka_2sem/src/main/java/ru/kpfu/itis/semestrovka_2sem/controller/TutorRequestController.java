@@ -1,17 +1,22 @@
 // src/main/java/ru/kpfu/itis/semestrovka_2sem/controller/TutorRequestController.java
 package ru.kpfu.itis.semestrovka_2sem.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.kpfu.itis.semestrovka_2sem.dto.StudentResponseCreateDto;
 import ru.kpfu.itis.semestrovka_2sem.dto.TutorRequestCreateDto;
 import ru.kpfu.itis.semestrovka_2sem.model.TutorRequest;
 import ru.kpfu.itis.semestrovka_2sem.model.Tutor;
+import ru.kpfu.itis.semestrovka_2sem.model.Subject;
 import ru.kpfu.itis.semestrovka_2sem.model.User;
 import ru.kpfu.itis.semestrovka_2sem.service.TutorRequestService;
 import ru.kpfu.itis.semestrovka_2sem.service.TutorService;
@@ -25,6 +30,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/requests")
 @RequiredArgsConstructor
+@Slf4j
 public class TutorRequestController {
 
     private final TutorRequestService tutorRequestService;
@@ -37,10 +43,34 @@ public class TutorRequestController {
      * Список всех заявок — доступно всем.
      */
     @GetMapping
-    public String listAll(Model model) {
-        List<TutorRequest> requests = tutorRequestService.findAll();
+    public String listAll(@RequestParam(value = "subjectId", required = false) Long subjectId,
+                          Model model) {
+        List<TutorRequest> requests;
+        if (subjectId != null) {
+            Subject subject = subjectService.findById(subjectId)
+                    .orElseThrow(() -> new IllegalArgumentException("Предмет не найден"));
+            requests = tutorRequestService.findAllBySubjectName(subject.getName());
+            model.addAttribute("selectedSubject", subject);
+        } else {
+            requests = tutorRequestService.findAll();
+        }
         model.addAttribute("requests", requests);
         return "request/list"; // src/main/resources/templates/request/list.html
+    }
+
+    @PreAuthorize("hasRole('TUTOR')")
+    @GetMapping("/my")
+    public String listMyRequests(Authentication authentication, Model model) {
+        User currentUser = userService.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+        Optional<Tutor> tutorOpt = tutorService.findByUser(currentUser);
+        if (tutorOpt.isEmpty()) {
+            return "redirect:/tutors/create";
+        }
+        Tutor tutor = tutorOpt.get();
+        List<TutorRequest> requests = tutorRequestService.findAllByTutorId(tutor.getId());
+        model.addAttribute("requests", requests);
+        return "request/list";
     }
 
     /**
@@ -59,8 +89,20 @@ public class TutorRequestController {
      */
     @PreAuthorize("hasRole('TUTOR')")
     @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("form", new TutorRequestCreateDto());
+    public String showCreateForm(Authentication authentication, Model model) {
+        // Перед показом формы убедимся, что у пользователя есть профиль репетитора
+        User currentUser = userService.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+        Optional<Tutor> tutorOpt = tutorService.findByUser(currentUser);
+        if (tutorOpt.isEmpty()) {
+            // если профиль отсутствует, направляем на его создание
+            return "redirect:/tutors/create";
+        }
+
+        if (!model.containsAttribute("form")) {
+            model.addAttribute("form", new TutorRequestCreateDto());
+        }
+
         model.addAttribute("subjects", subjectService.findAll());
         return "request/create"; // src/main/resources/templates/request/create.html
     }
@@ -71,21 +113,30 @@ public class TutorRequestController {
     @PreAuthorize("hasRole('TUTOR')")
     @PostMapping("/create")
     public String processCreate(
-            @ModelAttribute("form") TutorRequestCreateDto form,
+            @Valid @ModelAttribute("form") TutorRequestCreateDto form,
+            BindingResult bindingResult,
             Authentication authentication,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("subjects", subjectService.findAll());
+            return "request/create";
+        }
         try {
             User currentUser = userService.findByEmail(authentication.getName())
                     .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
-            // Находим профиль репетитора текущего пользователя вручную
-            Optional<Tutor> tutorOpt = tutorService.findAll().stream()
-                    .filter(t -> t.getUser().getId().equals(currentUser.getId()))
-                    .findFirst();
-            Tutor tutor = tutorOpt.orElseThrow(() -> new IllegalArgumentException("Профиль репетитора не найден"));
+            Optional<Tutor> tutorOpt = tutorService.findByUser(currentUser);
+            if (tutorOpt.isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Сначала создайте профиль репетитора");
+                return "redirect:/tutors/create";
+            }
+            Tutor tutor = tutorOpt.get();
             form.setTutorId(tutor.getId());
             tutorRequestService.create(form);
         } catch (Exception ex) {
+            log.error("Error creating tutor request", ex);
             model.addAttribute("creationError", ex.getMessage());
             model.addAttribute("subjects", subjectService.findAll());
             return "request/create";
@@ -125,7 +176,8 @@ public class TutorRequestController {
     @PostMapping("/edit/{id}")
     public String processEdit(
             @PathVariable Long id,
-            @ModelAttribute("form") TutorRequestCreateDto form,
+            @Valid @ModelAttribute("form") TutorRequestCreateDto form,
+            BindingResult bindingResult,
             Authentication authentication,
             Model model
     ) {
@@ -133,6 +185,11 @@ public class TutorRequestController {
                 .orElseThrow(() -> new IllegalArgumentException("Заявка не найдена"));
         if (!existing.getTutor().getUser().getEmail().equals(authentication.getName())) {
             return "redirect:/requests";
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("subjects", subjectService.findAll());
+            model.addAttribute("requestId", id);
+            return "request/edit";
         }
         try {
             form.setTutorId(existing.getTutor().getId());

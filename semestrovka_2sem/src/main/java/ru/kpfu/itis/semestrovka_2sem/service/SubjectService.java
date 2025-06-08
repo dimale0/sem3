@@ -30,6 +30,11 @@ public interface SubjectService {
     Optional<Subject> findByName(String name);
 
     /**
+     * Поиск предмета без учёта регистра.
+     */
+    Optional<Subject> findByNameIgnoreCase(String name);
+
+    /**
      * Возвращает список всех предметов.
      * @return может быть пустым списком
      */
