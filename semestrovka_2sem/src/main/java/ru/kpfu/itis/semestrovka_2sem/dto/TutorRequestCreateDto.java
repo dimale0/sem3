@@ -18,7 +18,7 @@ public class TutorRequestCreateDto {
     private Long subjectId;
 
     // Название предмета, если хотим ввести вручную
-    @NotBlank(message = "Название предмета обязательно")
+    // Может быть пустым, если выбран существующий предмет
     private String subjectName;
 
     @NotNull(message = "Цена обязательна")
