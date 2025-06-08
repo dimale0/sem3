@@ -22,7 +22,9 @@
     </p>
   </div>
   <div>
-            <span th:if="${#request.isUserInRole('TUTOR') and tutor.user.email == #authentication.principal.username}">
+            <span th:if="${#authentication != null
+                          and #request.isUserInRole('TUTOR')
+                          and tutor.user.email == #authentication.principal.username}">
                 <a th:href="@{/tutors/edit/{id}(id=${tutor.id})}">Редактировать профиль</a>
                 &nbsp;|&nbsp;
                 <form th:action="@{/tutors/delete/{id}(id=${tutor.id})}" method="post" style="display:inline">

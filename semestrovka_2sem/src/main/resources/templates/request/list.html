@@ -26,10 +26,12 @@
       <td th:text="${req.subject.name}"></td>
       <td th:text="${req.price}"></td>
       <td th:text="${req.duration} + ' мин'"></td>
-      <td th:text="${#dates.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+      <td th:text="${#temporals.format(req.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
       <td>
         <a th:href="@{/requests/view/{id}(id=${req.id})}">Детали</a>
-        <span th:if="${#request.isUserInRole('TUTOR') and req.tutor.user.email == #authentication.principal.username}">
+        <span th:if="${#authentication != null
+                      and #request.isUserInRole('TUTOR')
+                      and req.tutor.user.email == #authentication.principal.username}">
             &nbsp;|&nbsp;
             <a th:href="@{/responses/request/{id}(id=${req.id})}">Отклики</a>
             &nbsp;|&nbsp;

@@ -14,7 +14,7 @@
     <p><strong>Длительность:</strong> <span th:text="${request.duration}"></span> мин</p>
     <p><strong>Описание:</strong></p>
     <p th:text="${request.description != null ? request.description : '-'}"></p>
-    <p><strong>Дата создания:</strong> <span th:text="${#dates.format(request.createdAt, 'dd.MM.yyyy HH:mm')}"></span></p>
+    <p><strong>Дата создания:</strong> <span th:text="${#temporals.format(request.createdAt, 'dd.MM.yyyy HH:mm')}"></span></p>
   </div>
 
   <div th:if="${#request.isUserInRole('STUDENT')}">
@@ -27,7 +27,9 @@
     <p id="responseResult" style="color: red;"></p>
   </div>
 
-  <div th:if="${#request.isUserInRole('TUTOR') and request.tutor.user.email == #authentication.principal.username}">
+  <div th:if="${#authentication != null
+                and #request.isUserInRole('TUTOR')
+                and request.tutor.user.email == #authentication.principal.username}">
     <p>
       <a th:href="@{/responses/request/{id}(id=${request.id})}">Посмотреть отклики</a>
     </p>
