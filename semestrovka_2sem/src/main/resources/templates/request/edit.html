@@ -13,7 +13,7 @@
 
     <div class="form-group" th:classappend="${#fields.hasErrors('subjectName')}? ' error'">
       <label for="subjectName">Предмет</label>
-      <input id="subjectName" list="subjectsList" th:field="*{subjectName}" />
+      <input id="subjectName" list="subjectsList" th:field="*{subjectName}" placeholder="Введите или выберите предмет" />
       <datalist id="subjectsList">
         <option th:each="s : ${subjects}" th:value="${s.name}"></option>
       </datalist>

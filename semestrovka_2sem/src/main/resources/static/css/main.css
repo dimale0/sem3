@@ -134,6 +134,10 @@ form textarea{
     background:#fff;color:var(--color-text-primary);
     transition:border-color .2s,box-shadow .2s
 }
+/* инпут с datalist выглядит как обычный текстовый */
+form input[list]{
+    width:100%;
+}
 
 /* чекбоксы списка предметов */
 .checkbox-list{display:flex;flex-wrap:wrap;gap:.5rem 1rem}

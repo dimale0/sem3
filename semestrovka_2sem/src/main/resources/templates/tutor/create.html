@@ -29,7 +29,9 @@
           <span th:text="${subj.name}"></span>
         </label>
       </div>
+      <input type="text" th:field="*{newSubjectName}" placeholder="Добавить новый предмет" />
       <span class="error-message" th:if="${#fields.hasErrors('subjectIds')}" th:errors="*{subjectIds}"></span>
+      <span class="error-message" th:if="${#fields.hasErrors('newSubjectName')}" th:errors="*{newSubjectName}"></span>
     </div>
 
     <div th:if="${creationError}">

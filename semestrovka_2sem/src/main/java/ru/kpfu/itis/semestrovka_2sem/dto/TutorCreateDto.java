@@ -24,4 +24,8 @@ public class TutorCreateDto {
 
     @NotEmpty(message = "Нужно выбрать хотя бы один предмет")
     private Set<Long> subjectIds = new java.util.HashSet<>();
+
+    /** Дополнительный предмет, если его нет в списке */
+    @Size(max = 100, message = "Название предмета максимум 100 символов")
+    private String newSubjectName;
 }
