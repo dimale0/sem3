@@ -62,7 +62,7 @@ public class TutorRequestServiceImpl implements TutorRequestService {
             throw new IllegalArgumentException("Price должен быть > 0");
         }
 
-        // 4) Проверка duration ∈ {45,60,90}
+        return tutorRequestRepository.findAllWithDetails();
         if (createDto.getDuration() == null
                 || !ALLOWED_DURATIONS.contains(createDto.getDuration())) {
             throw new IllegalArgumentException(
