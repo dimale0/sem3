@@ -53,7 +53,6 @@ public class TutorRequestServiceImpl implements TutorRequestService {
             subjName = subjName.trim();
             subject = subjectRepository.findByName(subjName)
                     .orElseGet(() -> subjectRepository.save(Subject.builder().name(subjName).build()));
-
         }
 
         // 3) Проверка price > 0
